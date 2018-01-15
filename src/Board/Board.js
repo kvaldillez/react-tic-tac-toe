@@ -1,7 +1,7 @@
 import React from 'react';
 
 const board = (props) => {
-    const status = "Next player: X";
+    const status = "Next player: "+(props.xIsNext ? 'X' : 'O');
 
     return (
         <div>
