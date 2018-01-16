@@ -1,11 +1,8 @@
 import React from 'react';
 
 const board = (props) => {
-    const status = "Next player: "+(props.xIsNext ? 'X' : 'O');
-
     return (
         <div>
-        <div className="status">{status}</div>
         <div className="board-row">
             {props.renderSquare(0)}
             {props.renderSquare(1)}
