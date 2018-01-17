@@ -12,13 +12,14 @@ class Game extends Component {
         squares: Array(9).fill(null)
       }
     ],
-    xIsNext: true
+    stepNumber: 0,
+    xIsNext: true,
   };
 
   handleClick = i => {
-    const history = this.state.history;
+    const history = this.state.history.slice(0, this.state.stepNumber + 1);
     const current = history[history.length - 1];
-    const squares = [...this.state.squares];
+    const squares = current.squares.slice();
 
     if (this.calculateWinner(squares) || squares[i]) {
       return;
@@ -32,15 +33,16 @@ class Game extends Component {
           squares: squares
         }
       ]),
+      stepNumber: history.length,
       xIsNext: !this.state.xIsNext
     });
     console.log("clicked", this.state.squares);
   };
 
-  renderSquare = i => {
+  renderSquare = (i, squares) => {
     return (
       <Square
-        value={this.state.squares[i]}
+        value={squares[i]}
         onClick={() => this.handleClick(i)}
       />
     );
@@ -72,16 +74,25 @@ class Game extends Component {
     return null;
   };
 
+  jumpTo = (step) => {
+    this.setState({
+      stepNumber: step,
+      xIsNext: (step % 2) === 0,
+    });
+  }
+
   render() {
     const history = this.state.history;
-    const current = history[history.length - 1];
-    const winner = this.calculateWinner(this.state.squares);
+    const current = history[this.state.stepNumber];
+    const winner = this.calculateWinner(current.squares);
 
     const moves = history.map((step, move) => {
       const desc = move ? "Go to move #" + move : "Go to game start";
-      return <li>
+      return (
+        <li key={move}>
           <button onClick={() => this.jumpTo(move)}>{desc}</button>
-        </li>;
+        </li>
+      );
     });
 
     let status;
